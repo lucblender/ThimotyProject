@@ -17,6 +17,7 @@ class StepperMotor:
         self.step_length = 0
         self.enable(1)
         self.step(0)
+        self.initialized = False
     
     def set_microstep(self, microstep):
         self.microstep = microstep
@@ -74,6 +75,8 @@ class StepperMotor:
         self.enable(1)        
         self.set_microstep(last_microstep)
         
+        self.initialized = True
+        
     def do_step(self, factor, stepNumber, direction):
         
         self.enable(0)
@@ -92,6 +95,8 @@ class StepperMotor:
         self.enable(1)
         
     def do_lenght(self, factor, length, direction):
+        if self.initialized == False:
+           self.init_position()
         stepNumber = int((length/self.length)*self.step_length)
         print(stepNumber)
         self.enable(0)
@@ -109,8 +114,10 @@ class StepperMotor:
             utime.sleep(0.001*factor)        
         self.enable(1)
         
-
+    #time in s lenght in mm
     def do_lenght_time(self, time, length, direction):
+        if self.initialized == False:
+           self.init_position()
         stepNumber = int((length/self.length)*self.step_length)        
         print(stepNumber)
         local_microstep = 1
@@ -130,3 +137,4 @@ class StepperMotor:
         
     
             
+
